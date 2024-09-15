@@ -185,8 +185,8 @@ function create() {
 
    // temporzador 
    this.tiempo = 60;
-   this.tiempoText = this.add.text(16, 16, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
- 
+   this.tiempoText = this.add.text(900, 0, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
+  this.tiempoText.setScrollFactor(0);
    // Configura el temporizador para decrementar la puntuación
    this.time.addEvent({
      delay: 1000, // Cada segundo
