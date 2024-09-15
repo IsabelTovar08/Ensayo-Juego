@@ -1,9 +1,8 @@
 /* global Phaser */
-
 import { createAnimations } from "./animations.js"
 
 const config = {
-  type: Phaser.AUTO, // webgl, canvas
+  type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
   backgroundColor: '#11203b',
@@ -15,249 +14,195 @@ const config = {
       debug: false
     }
   },
-  scene: {
-    preload, // se ejecuta para precargar recursos
-    create, // se ejecuta cuando el juego comienza
-    update // se ejecuta en cada frame
-  }
-}
+  scene: { preload, create, update }
+};
 
-new Phaser.Game(config)
-// this -> game -> el juego que estamos construyendo
+new Phaser.Game(config);
 
 function preload () {
-  this.load.image('button', 'assets/abajo2.png'); 
-  // this.load.image(
-  //   'fondo',
-  //   'assets/fondo.jpg'
-  // )
-  this.load.image(
-    'cloud1',
-    'assets/scenery/overworld/cloud1.png'
-  )
-  this.load.image(
-    'oxigeno',
-    'assets/oxigeno.png'
-  )
-
-  // this.load.image('fondo', 'assets/fondo.jpg');
-  this.load.image(
-    'floorbricks',
-    'assets/scenery/overworld/floorbricks.png'
-  )
-  this.load.image(
-    'abajo',
-    'assets/abajo3.png'
-  )
-  this.load.image(
-    'lava',
-    'assets/lava.png'
-  )
-  this.load.spritesheet(
-    'mario', // <--- id
-    'assets/entities/mario.png',
-    { frameWidth: 18, frameHeight: 16 }
-  )
-
-  this.load.audio('gameover', 'assets/sound/music/gameover.mp3')
-} // 1.
+  this.load.image('star', 'planetas/estrella.png');
+  this.load.image('button', 'assets/abajo2.png');
+  this.load.image('cloud1', 'assets/scenery/overworld/cloud1.png');
+  this.load.image('planeta4', 'planetas/4.png');
+  this.load.image('planeta5', 'planetas/5.png');
+  this.load.image('planeta6', 'planetas/6.png');
+  this.load.image('planeta7', 'planetas/7.png');
+  this.load.image('planeta8', 'planetas/8.png');
+  this.load.image('planeta9', 'planetas/9.png');
+  this.load.image('oxigeno', 'assets/oxigeno.png');
+  this.load.image('floorbricks', 'assets/scenery/overworld/floorbricks.png');
+  this.load.image('abajo', 'assets/abajo3.png');
+  this.load.image('lava', 'assets/lava.png');
+  this.load.spritesheet('mario', 'assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
+  this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
+}
 
 function create () {
-  // this.add.image(0, 0, 'fondo').setOrigin(0,0).setScale(1.7, 1.4);
-  // image(x, y, id-del-asset)
-  this.add.image(100, 50, 'cloud1')
-    .setOrigin(0, 0)
-    .setScale(0.15)
-    let button = this.add.sprite(400, 300, 'button').setInteractive().setScale(0.02);
+  // Añadiendo imágenes
+  this.stars = this.add.group({
+    key: 'star',
+    repeat: 100, // Número de estrellas a crear
+    setXY: { x: Phaser.Math.Between(0, config.width), y: Phaser.Math.Between(0, config.height), stepX: 500, stepY: 5 }
+  });
 
-    // Configuración de estilos para el menú
-    let textStyle = {
-        font: 'bold 28px Arial',        // Tipo y tamaño de fuente
-        fill: '#fff',                   // Color del texto
-        backgroundColor: '#000',        // Color de fondo del texto
-        padding: { x: 20, y: 10 },      // Espaciado alrededor del texto
-        align: 'center',                // Alineación del texto
-        border: '2px solid #fff',       // Borde (usado como simulación)
-        shadow: {                       // Sombras en el texto
-            offsetX: 2,
-            offsetY: 2,
-            color: '#333',
-            blur: 2,
-            stroke: true,
-            fill: true
-        }
-    };
+  // Configuración para cada estrella
+  this.stars.children.iterate(function (child) {
+    child.setScale(Phaser.Math.FloatBetween(0.03, 0.05)); // Variar tamaño de las estrellas
+    child.speed = Phaser.Math.FloatBetween(0.5, 1.3)// Fijar la velocidad a un valor extremadamente lento
+  });
 
-    // Crear el menú de opciones
-    let optionsMenu = this.add.text(250, 150, 'Menu de Opciones\n1. Opción 1\n2. Opción 2\n3. Opción 3', textStyle);
-    optionsMenu.setVisible(false);  // Ocultamos el menú inicialmente
+  this.add.image(800, 20, 'planeta4')
+  .setOrigin(0, 1)
+  .setScale(0.15)
+  this.add.image(50, 50, 'planeta5')
+  .setOrigin(0, 0)
+  .setScale(0.15)
+  this.add.image(560, 270, 'planeta6')
+  .setOrigin(0, 0)
+  .setScale(0.15)
+  this.add.image(900, 50, 'planeta7')
+  .setOrigin(0, 0)
+  .setScale(0.15)
+  this.add.image(10, -100, 'planeta8')
+  .setOrigin(0, 1)
+  .setScale(0.15)
+  this.add.image(300, -80, 'planeta9')
+  .setOrigin(0, 1)
+  .setScale(0.1)
+  // Botón interactivo
+  // let button = this.add.sprite(400, 300, 'button').setInteractive().setScale(0.02);
 
-    // Mostrar/ocultar el menú al hacer clic en el botón
-    button.on('pointerdown', () => {
-        optionsMenu.setVisible(!optionsMenu.visible);
-    });
-  this.floor = this.physics.add.staticGroup()
+  // // Menú de opciones
+  // let textStyle = {
+  //   font: 'bold 28px Arial',
+  //   fill: '#fff',
+  //   backgroundColor: '#000',
+  //   padding: { x: 20, y: 10 },
+  //   align: 'center',
+  //   shadow: { offsetX: 2, offsetY: 2, color: '#333', blur: 2, stroke: true, fill: true }
+  // };
+  // let optionsMenu = this.add.text(250, 150, 'Menu de Opciones\n1. Opción 1\n2. Opción 2\n3. Opción 3', textStyle);
+  // optionsMenu.setVisible(false);
 
-  this.floor
-    .create(0, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
+  // button.on('pointerdown', () => {
+  //   optionsMenu.setVisible(!optionsMenu.visible);
+  // });
 
-    .refreshBody()
-    this.floor
-    .create(155, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-  this.floor
-    .create(310, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
+  // Crear plataformas
+  this.floor = this.physics.add.staticGroup();
+  createPlatforms(this);
 
-    .refreshBody()
+  // Oxigeno
+  this.oxigeno = this.physics.add.group();
+  this.oxigeno.create(200, config.height - 280, 'oxigeno').setOrigin(0, 0).setScale(0.1);
 
-    this.floor
-    .create(400, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(465, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(620, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(775, config.height - 27, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(930, config.height - 80, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(1096, config.height - 110, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(1240, config.height - 150, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(155, config.height - 200, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-  this.floor
-    .create(310, config.height - 200, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-
-    .refreshBody()
-
-    this.floor
-    .create(400, config.height - 200, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(465, config.height - 400, 'lava')
-    .setOrigin(0, 0.5)
-    .setScale(0.6)
-    .refreshBody()
-    this.floor
-    .create(620, config.height - 400, 'lava')
-    .setOrigin(0, 0.5)
-    .setScale(0.6)
-    .refreshBody()
-    this.floor
-    .create(620, config.height - 600, 'lava')
-    .setOrigin(0, 0.5)
-    .setScale(0.6)
-    .refreshBody()
-    this.floor
-    .create(700, config.height - 202, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(850, config.height - 402, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.floor
-    .create(1050, config.height - 202, 'abajo')
-    .setOrigin(0, 0.5)
-    .setScale(0.05)
-    .refreshBody()
-    this.oxigeno = this.physics.add.group()
-    this.oxigeno.create(200, config.height - 280, 'oxigeno')
-    .setOrigin(0,0)
-    .setScale(0.1)
+  // Mario
   this.mario = this.physics.add.sprite(0, config.height - 80, 'mario')
     .setOrigin(0, 1)
     .setCollideWorldBounds(true)
     .setGravityY(300)
-    .setScale(2.5)
-    function collectStar (mario, oxigeno)
-    {
-        oxigeno.disableBody(true, true);
-    }
-  this.physics.world.setBounds(0, 0, 1450, config.height)
-  this.physics.add.collider(this.mario, this.floor)
+    .setScale(2.5);
+
+  // Colisiones y física
+  this.physics.world.setBounds(0, config.height - 1200, 1450, 1200);
+  this.physics.add.collider(this.mario, this.floor);
   this.physics.add.collider(this.oxigeno, this.floor);
-  this.physics.add.overlap(this.mario, this.oxigeno, collectStar, null, this);
+  this.physics.add.overlap(this.mario, this.oxigeno, collectOxigeno, null, this);
 
+  // Cámara
+  this.cameras.main.setBounds(0, config.height - 1200, 1450, 1200);
+  this.cameras.main.startFollow(this.mario);
 
-  this.cameras.main.setBounds(0, 0, 1450, config.height)
-  this.cameras.main.startFollow(this.mario)
-
-  createAnimations(this)
-
-  this.keys = this.input.keyboard.createCursorKeys()
+  // Animaciones y entrada de teclado
+  createAnimations(this);
+  this.keys = this.input.keyboard.createCursorKeys();
 }
 
-function update () { // 3. continuamente
-  if (this.mario.isDead) return
+function update () {
+  this.stars.children.iterate(function (child) {
+    child.y += child.speed; // Mover cada estrella hacia abajo lentamente
 
-  if (this.keys.left.isDown) {
-    this.mario.anims.play('mario-walk', true)
-    this.mario.x -= 5
-    this.mario.flipX = true
-  } else if (this.keys.right.isDown) {
-    this.mario.anims.play('mario-walk', true)
-    this.mario.x += 5
-    this.mario.flipX = false
-  } else {
-    this.mario.anims.play('mario-idle', true)
-  }
+    // Reposicionar las estrellas que salen de la pantalla
+    if (child.y > config.height) {
+      child.y = 0; // Colocar la estrella de nuevo en la parte superior
+      child.x = Phaser.Math.Between(0, config.width); // Cambiar la posición horizontal al azar
+    }
+  });
+  if (this.mario.isDead) return;
 
-  if (this.keys.up.isDown && this.mario.body.touching.down) {
-    this.mario.setVelocityY(-300)
-    this.mario.anims.play('mario-jump', true)
-  }
-
+  handleMarioMovement(this);
+  
+  // Verificar si Mario cae fuera de los límites del mundo
   if (this.mario.y >= config.height) {
-    this.mario.isDead = true
-    this.mario.anims.play('mario-dead')
-    this.mario.setCollideWorldBounds(false)
-    this.sound.add('gameover', { volume: 0.2 }).play()
+    this.mario.isDead = true;
+    this.mario.anims.play('mario-dead');
+    this.mario.setCollideWorldBounds(false);
+    this.sound.add('gameover', { volume: 0.2 }).play();
 
     setTimeout(() => {
-      this.mario.setVelocityY(-350)
-    }, 100)
+      this.mario.setVelocityY(-350);
+    }, 100);
 
     setTimeout(() => {
-      this.scene.restart()
-    }, 2000)
+      this.scene.restart();
+    }, 2000);
   }
 }
 
+function createPlatforms(scene) {
+  const platformPositions = [
+    { x: 0, y: config.height - 27, scale: 0.05 },
+    { x: 155, y: config.height - 27, scale: 0.05 },
+    { x: 310, y: config.height - 27, scale: 0.05 },
+    { x: 465, y: config.height - 27, scale: 0.05 },
+    { x: 620, y: config.height - 27, scale: 0.05 },
+    { x: 775, y: config.height - 27, scale: 0.05 },
+    { x: 930, y: config.height - 80, scale: 0.05 },
+    { x: 1096, y: config.height - 110, scale: 0.05 },
+    { x: 1240, y: config.height - 150, scale: 0.05 },
+    { x: 155, y: config.height - 200, scale: 0.05 },
+    { x: 310, y: config.height - 200, scale: 0.05 },
+    { x: 400, y: config.height - 200, scale: 0.05 },
+    { x: 300, y: config.height - 280, scale: 0.05 },
+    { x: 400, y: config.height - 580, scale: 0.05 },
+    { x: 600, y: config.height - 620, scale: 0.05 },
+    { x: 300, y: config.height - 500, scale: 0.6, asset: 'lava' },
+    { x: 465, y: config.height - 400, scale: 0.6, asset: 'lava' },
+    { x: 620, y: config.height - 400, scale: 0.6, asset: 'lava' },
+    { x: 680, y: config.height - 460, scale: 0.6, asset: 'lava' },
+    // { x: 680, y: config.height - 860, scale: 0.6, asset: 'lava' },
+    { x: 700, y: config.height - 202, scale: 0.05 },
+    { x: 850, y: config.height - 402, scale: 0.05 },
+    { x: 1050, y: config.height - 202, scale: 0.05 }
+  ];
+
+  platformPositions.forEach(pos => {
+    const asset = pos.asset || 'abajo';
+    scene.floor.create(pos.x, pos.y, asset).setOrigin(0, 0.5).setScale(pos.scale).refreshBody();
+  });
+}
+
+function collectOxigeno(mario, oxigeno) {
+  oxigeno.disableBody(true, true);
+}
+
+function handleMarioMovement(scene) {
+  const { mario, keys } = scene;
+
+  if (keys.left.isDown) {
+    mario.anims.play('mario-walk', true);
+    mario.x -= 5;
+    mario.flipX = true;
+  } else if (keys.right.isDown) {
+    mario.anims.play('mario-walk', true);
+    mario.x += 5;
+    mario.flipX = false;
+  } else {
+    mario.anims.play('mario-idle', true);
+  }
+
+  if (keys.up.isDown && mario.body.touching.down) {
+    mario.setVelocityY(-400);
+    mario.anims.play('mario-jump', true);
+  }
+}
