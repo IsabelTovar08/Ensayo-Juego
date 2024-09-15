@@ -13,7 +13,7 @@ const config = {
       gravity: { y: 300 },
       debug: false
     }
-  },
+  },  
   scene: { preload, create, update }
 };
 
@@ -120,19 +120,19 @@ function create () {
 
 
   // temporzador 
-  this.score = 60;
-  this.scoreText = this.add.text(16, 16, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
+  this.tiempo = 60;
+  this.tiempoText = this.add.text(16, 16, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
 
   // Configura el temporizador para decrementar la puntuación
   this.time.addEvent({
     delay: 1000, // Cada segundo
     callback: () => {
-      if (this.score > 0) {
-        this.score -= 2; // Ajusta el decremento según la velocidad deseada
-        this.scoreText.setText('TIEMPO DE VIDA: ' + this.score);
+      if (this.tiempo > 0) {
+        this.tiempo -= 2; // Ajusta el decremento según la velocidad deseada
+        this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo);
       }
     // Si la puntuación llega a 0, marcar a Mario como muerto
-    if (this.score <= 0 && !this.mario.isDead) {
+    if (this.tiempo <= 0 && !this.mario.isDead) {
       this.mario.isDead = true;
       this.mario.anims.play('mario-dead');
       this.mario.setCollideWorldBounds(false);
@@ -216,8 +216,8 @@ function createPlatforms(scene) {
 // temporizador 
 function collectOxigeno(mario, oxigeno) {
   oxigeno.disableBody(true, true);
-  this.score  = 60; // Accede a la puntuación global de la escena
-  this.scoreText.setText('TIEMPO DE VIDA: ' + this.score); // Actualiza el texto de la puntuación
+  this.tiempo  = 60; // Accede a la puntuación global de la escena
+  this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo); // Actualiza el texto de la puntuación
 
   
 
