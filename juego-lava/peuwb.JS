@@ -1,5 +1,5 @@
 /* global Phaser */
-import { createAnimations } from "./animations.js"
+import { createAnimations } from "./animations.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -29,6 +29,7 @@ function preload() {
   this.load.image('planeta7', 'planetas/7.png');
   this.load.image('planeta8', 'planetas/8.png');
   this.load.image('planeta9', 'planetas/9.png');
+  this.load.image('cohete', 'planetas/tr.png');
   this.load.image('oxigeno', 'assets/oxigeno.png');
   this.load.image('mineral', 'planetas/cristal.png');
   this.load.image('floorbricks', 'assets/scenery/overworld/floorbricks.png');
@@ -37,8 +38,24 @@ function preload() {
   this.load.spritesheet('mario', 'assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
   this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
 }
+
+// Obtener el modal y el botón de cierre
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+
+// Función para mostrar el modal
+function showModal() {
+  modal.style.display = "block";
+}
+
+// Función para ocultar el modal
+function hideModal() {
+  modal.style.display = "none";
+}
+
 var score = 0;
 var scoreText;
+
 function create() {
   // Añadiendo imágenes
   this.stars = this.add.group({
@@ -50,53 +67,39 @@ function create() {
   // Configuración para cada estrella
   this.stars.children.iterate(function (child) {
     child.setScale(Phaser.Math.FloatBetween(0.03, 0.05)); // Variar tamaño de las estrellas
-    child.speed = Phaser.Math.FloatBetween(0.5, 1.3)// Fijar la velocidad a un valor extremadamente lento
+    child.speed = Phaser.Math.FloatBetween(0.5, 1.3); // Fijar la velocidad a un valor extremadamente lento
   });
 
-  this.add.image(800, 20, 'planeta4')
-    .setOrigin(0, 1)
-    .setScale(0.15)
-  this.add.image(50, 50, 'planeta5')
-    .setOrigin(0, 0)
-    .setScale(0.15)
-  this.add.image(560, 270, 'planeta6')
-    .setOrigin(0, 0)
-    .setScale(0.15)
-  this.add.image(900, 50, 'planeta7')
-    .setOrigin(0, 0)
-    .setScale(0.15)
-  this.add.image(10, -100, 'planeta8')
-    .setOrigin(0, 1)
-    .setScale(0.15)
-  this.add.image(300, -80, 'planeta9')
-    .setOrigin(0, 1)
-    .setScale(0.1)
-  // Botón interactivo
-  // let button = this.add.sprite(400, 300, 'button').setInteractive().setScale(0.02);
-
-  // // Menú de opciones
-  // let textStyle = {
-  //   font: 'bold 28px Arial',
-  //   fill: '#fff',
-  //   backgroundColor: '#000',
-  //   padding: { x: 20, y: 10 },
-  //   align: 'center',
-  //   shadow: { offsetX: 2, offsetY: 2, color: '#333', blur: 2, stroke: true, fill: true }
-  // };
-  // let optionsMenu = this.add.text(250, 150, 'Menu de Opciones\n1. Opción 1\n2. Opción 2\n3. Opción 3', textStyle);
-  // optionsMenu.setVisible(false);
-
-  // button.on('pointerdown', () => {
-  //   optionsMenu.setVisible(!optionsMenu.visible);
-  // });
-
-  // Crear plataformas
+  // Crear el grupo de plataformas
   this.floor = this.physics.add.staticGroup();
   createPlatforms(this);
 
-  // Oxigeno
-  // this.oxigeno = this.physics.add.group();
-  // this.oxigeno.create(200, config.height - 280, 'oxigeno').setOrigin(0, 0).setScale(0.1);
+  // Configurar el cohete como un sprite estático
+  this.cohete = this.physics.add.staticSprite(600, 10, 'cohete')
+    .setOrigin(0, 1)
+    .setScale(0.15);
+
+  // Crear otras imágenes de planeta
+  this.add.image(800, 20, 'planeta4')
+    .setOrigin(0, 1)
+    .setScale(0.15);
+  this.add.image(50, 50, 'planeta5')
+    .setOrigin(0, 0)
+    .setScale(0.15);
+  this.add.image(560, 270, 'planeta6')
+    .setOrigin(0, 0)
+    .setScale(0.15);
+  this.add.image(900, 50, 'planeta7')
+    .setOrigin(0, 0)
+    .setScale(0.15);
+  this.add.image(10, -100, 'planeta8')
+    .setOrigin(0, 1)
+    .setScale(0.15);
+  this.add.image(300, -80, 'planeta9')
+    .setOrigin(0, 1)
+    .setScale(0.1);
+
+  // Configurar el grupo de oxígeno
   this.oxigeno = this.physics.add.group({
     key: 'oxigeno',
     repeat: 4,
@@ -105,26 +108,23 @@ function create() {
 
   this.oxigeno.children.iterate(function (child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
-    child.setScale(0.1)
+    child.setScale(0.1);
   });
-  // Crea el grupo de minerales con posiciones y aleatorias
+
+  // Crear el grupo de minerales
   this.mineral = this.physics.add.group({
     key: 'mineral',
     repeat: 5,
-    setXY: { x: Phaser.Math.Between(100, 200), y: 0, stepX: 150 } // Empezamos con y: 0, luego ajustamos cada mineral
+    setXY: { x: Phaser.Math.Between(100, 200), y: 0, stepX: 150 }
   });
 
-  // Itera sobre los minerales para ajustar su posición y otros atributos
   this.mineral.children.iterate(function (child) {
-    // Asigna aleatoriamente la posición vertical y: 0 o y: 400
     child.setY(Phaser.Math.Between(0, 1) === 0 ? 0 : 400);
-
-    // Configura el rebote, escala y otros atributos necesarios
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
     child.setScale(0.08);
   });
 
-  // Mario
+  // Configurar Mario
   this.mario = this.physics.add.sprite(0, config.height - 80, 'mario')
     .setOrigin(0, 1)
     .setCollideWorldBounds(true)
@@ -135,14 +135,17 @@ function create() {
   this.startX = 0;
   this.startY = config.height - 80;
 
+  // Mostrar puntaje
   scoreText = this.add.text(16, 0, 'score: 0', { fontSize: '32px', fill: '#fff' });
   scoreText.setScrollFactor(0);
-  // Colisiones y física
-  this.physics.world.setBounds(0, config.height - 1200, 1450, 1200);
+
+  // Configuración de colisiones y superposiciones
   this.physics.add.collider(this.mario, this.floor);
   this.physics.add.collider(this.oxigeno, this.floor);
-  this.physics.add.overlap(this.mario, this.oxigeno, collectOxigeno, null, this);
   this.physics.add.collider(this.mineral, this.floor);
+  this.physics.add.collider(this.cohete, this.floor);
+  this.physics.add.overlap(this.mario, this.cohete, collectCohete, null, this);
+  this.physics.add.overlap(this.mario, this.oxigeno, collectOxigeno, null, this);
   this.physics.add.overlap(this.mario, this.mineral, collectMineral, null, this);
 
   // Cámara
@@ -152,6 +155,50 @@ function create() {
   // Animaciones y entrada de teclado
   createAnimations(this);
   this.keys = this.input.keyboard.createCursorKeys();
+
+  // Temporizador
+  this.tiempo = 60;
+  this.tiempoText = this.add.text(900, 0, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
+  this.tiempoText.setScrollFactor(0);
+  this.time.addEvent({
+    delay: 1000, // Cada segundo
+    callback: () => {
+      if (this.tiempo > 0) {
+        this.tiempo -= 2; // Ajusta el decremento según la velocidad deseada
+        this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo);
+      }
+      if (this.tiempo <= 0 && !this.mario.isDead) {
+        this.mario.isDead = true;
+        this.mario.anims.play('mario-dead');
+        this.mario.setCollideWorldBounds(false);
+        this.sound.add('gameover', { volume: 0.2 }).play();
+
+        setTimeout(() => {
+          this.mario.setVelocityY(-350);
+        }, 100);
+
+        setTimeout(() => {
+          this.scene.restart();
+        }, 2000);
+      }
+    },
+    loop: true
+  });
+
+  // Manejo del modal
+  this.input.on('pointerdown', function (pointer) {
+    showModal();
+  });
+
+  span.onclick = function () {
+    hideModal();
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      hideModal();
+    }
+  };
 }
 
 function update() {
@@ -177,7 +224,6 @@ function update() {
     this.sound.add('gameover', { volume: 0.2 }).play();
 
     setTimeout(() => {
-      // Restaurar la posición inicial de Mario
       this.mario.setX(this.startX);
       this.mario.setY(this.startY);
       this.mario.setVelocity(0, 0); // Detener movimiento
@@ -223,14 +269,24 @@ function createPlatforms(scene) {
   });
 }
 
+function collectCohete(mario, cohete) {
+  cohete.disableBody(true, true); // Desactiva el cohete
+
+  // Redirige a otro HTML
+  window.location.href = '../primero.html'; // Cambia la ruta según tu necesidad
+}
+
 function collectOxigeno(mario, oxigeno) {
   oxigeno.disableBody(true, true);
+  this.tiempo = 60; // Accede a la puntuación global de la escena
+  this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo); // Actualiza el texto de la puntuación
 }
+
 function collectMineral(mario, mineral) {
   mineral.disableBody(true, true);
 
-    score += 10;
-    scoreText.setText('Score: ' + score);
+  score += 10;
+  scoreText.setText('Score: ' + score);
 }
 
 function handleMarioMovement(scene) {
