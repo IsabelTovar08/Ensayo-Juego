@@ -37,6 +37,19 @@ function preload() {
   this.load.spritesheet('mario', 'assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
   this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
 }
+// Obtener el modal y el botón de cierre
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+
+// Función para mostrar el modal
+function showModal() {
+  modal.style.display = "block";
+}
+
+// Función para ocultar el modal
+function hideModal() {
+  modal.style.display = "none";
+}
 var score = 0;
 var scoreText;
 function create() {
@@ -123,6 +136,21 @@ function create() {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
     child.setScale(0.08);
   });
+  this.input.on('pointerdown', function (pointer) {
+    showModal();
+  });
+
+  // Ocultar el modal cuando se hace clic en el botón de cierre
+  span.onclick = function () {
+    hideModal();
+  }
+
+  // Ocultar el modal si el usuario hace clic fuera del modal
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      hideModal();
+    }
+  }
 
   // Mario
   this.mario = this.physics.add.sprite(0, config.height - 80, 'mario')
