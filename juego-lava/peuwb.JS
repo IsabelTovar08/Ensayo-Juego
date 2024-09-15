@@ -37,19 +37,6 @@ function preload() {
   this.load.spritesheet('mario', 'assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
   this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
 }
-// Obtener el modal y el botón de cierre
-const modal = document.getElementById("myModal");
-const span = document.getElementsByClassName("close")[0];
-
-// Función para mostrar el modal
-function showModal() {
-  modal.style.display = "block";
-}
-
-// Función para ocultar el modal
-function hideModal() {
-  modal.style.display = "none";
-}
 var score = 0;
 var scoreText;
 function create() {
@@ -136,21 +123,6 @@ function create() {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
     child.setScale(0.08);
   });
-  this.input.on('pointerdown', function (pointer) {
-    showModal();
-  });
-
-  // Ocultar el modal cuando se hace clic en el botón de cierre
-  span.onclick = function () {
-    hideModal();
-  }
-
-  // Ocultar el modal si el usuario hace clic fuera del modal
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      hideModal();
-    }
-  }
 
   // Mario
   this.mario = this.physics.add.sprite(0, config.height - 80, 'mario')
@@ -180,39 +152,6 @@ function create() {
   // Animaciones y entrada de teclado
   createAnimations(this);
   this.keys = this.input.keyboard.createCursorKeys();
-
-
-
-   // temporzador 
-   this.tiempo = 60;
-   this.tiempoText = this.add.text(16, 16, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
- 
-   // Configura el temporizador para decrementar la puntuación
-   this.time.addEvent({
-     delay: 1000, // Cada segundo
-     callback: () => {
-       if (this.tiempo > 0) {
-         this.tiempo -= 2; // Ajusta el decremento según la velocidad deseada
-         this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo);
-       }
-     // Si la puntuación llega a 0, marcar a Mario como muerto
-     if (this.tiempo <= 0 && !this.mario.isDead) {
-       this.mario.isDead = true;
-       this.mario.anims.play('mario-dead');
-       this.mario.setCollideWorldBounds(false);
-       this.sound.add('gameover', { volume: 0.2 }).play();
- 
-       setTimeout(() => {
-         this.mario.setVelocityY(-350);
-       }, 100);
- 
-       setTimeout(() => {
-         this.scene.restart();
-       }, 2000);
-     }
-   },
-   loop: true
- });
 }
 
 function update() {
@@ -286,9 +225,6 @@ function createPlatforms(scene) {
 
 function collectOxigeno(mario, oxigeno) {
   oxigeno.disableBody(true, true);
-  this.tiempo  = 60; // Accede a la puntuación global de la escena
-  this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo); // Actualiza el texto de la puntuación
-
 }
 function collectMineral(mario, mineral) {
   mineral.disableBody(true, true);
