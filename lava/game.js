@@ -29,6 +29,7 @@ function preload() {
   this.load.image('planeta7', 'planetas/7.png');
   this.load.image('planeta8', 'planetas/8.png');
   this.load.image('planeta9', 'planetas/9.png');
+  this.load.image('cohete','planetas/rr.png')
   this.load.image('oxigeno', 'assets/oxigeno.png');
   this.load.image('mineral', 'planetas/cristal.png');
   this.load.image('floorbricks', 'assets/scenery/overworld/floorbricks.png');
@@ -36,6 +37,19 @@ function preload() {
   this.load.image('lava', 'assets/lava.png');
   this.load.spritesheet('mario', 'assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
   this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
+}
+// Obtener el modal y el botón de cierre
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+
+// Función para mostrar el modal
+function showModal() {
+  modal.style.display = "block";
+}
+
+// Función para ocultar el modal
+function hideModal() {
+  modal.style.display = "none";
 }
 var score = 0;
 var scoreText;
@@ -52,6 +66,7 @@ function create() {
     child.setScale(Phaser.Math.FloatBetween(0.03, 0.05)); // Variar tamaño de las estrellas
     child.speed = Phaser.Math.FloatBetween(0.5, 1.3)// Fijar la velocidad a un valor extremadamente lento
   });
+
 
   this.add.image(800, 20, 'planeta4')
     .setOrigin(0, 1)
@@ -103,6 +118,12 @@ function create() {
     setXY: { x: Phaser.Math.Between(200, 350), y: 0, stepX: 280 }
   });
 
+
+  // cohete 
+  this.cohete = this.physics.add.group();
+  this.cohete.create(600, config.height - 980, 'cohete').setOrigin(0,0).setScale(0.1);
+
+
   this.oxigeno.children.iterate(function (child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
     child.setScale(0.1)
@@ -123,6 +144,21 @@ function create() {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
     child.setScale(0.08);
   });
+  this.input.on('pointerdown', function (pointer) {
+    showModal();
+  });
+
+  // Ocultar el modal cuando se hace clic en el botón de cierre
+  span.onclick = function () {
+    hideModal();
+  }
+
+  // Ocultar el modal si el usuario hace clic fuera del modal
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      hideModal();
+    }
+  }
 
   // Mario
   this.mario = this.physics.add.sprite(0, config.height - 80, 'mario')
@@ -140,7 +176,9 @@ function create() {
   // Colisiones y física
   this.physics.world.setBounds(0, config.height - 1200, 1450, 1200);
   this.physics.add.collider(this.mario, this.floor);
+  this.physics.add.collider(this.cohete, this.floor);
   this.physics.add.collider(this.oxigeno, this.floor);
+  this.physics.add.overlap(this.mario, this.cohete, collectCohete, null, this)
   this.physics.add.overlap(this.mario, this.oxigeno, collectOxigeno, null, this);
   this.physics.add.collider(this.mineral, this.floor);
   this.physics.add.overlap(this.mario, this.mineral, collectMineral, null, this);
@@ -152,6 +190,39 @@ function create() {
   // Animaciones y entrada de teclado
   createAnimations(this);
   this.keys = this.input.keyboard.createCursorKeys();
+
+
+
+   // temporzador 
+   this.tiempo = 60;
+   this.tiempoText = this.add.text(900, 0, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
+  this.tiempoText.setScrollFactor(0);
+   // Configura el temporizador para decrementar la puntuación
+   this.time.addEvent({
+     delay: 1000, // Cada segundo
+     callback: () => {
+       if (this.tiempo > 0) {
+         this.tiempo -= 2; // Ajusta el decremento según la velocidad deseada
+         this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo);
+       }
+     // Si la puntuación llega a 0, marcar a Mario como muerto
+     if (this.tiempo <= 0 && !this.mario.isDead) {
+       this.mario.isDead = true;
+       this.mario.anims.play('mario-dead');
+       this.mario.setCollideWorldBounds(false);
+       this.sound.add('gameover', { volume: 0.2 }).play();
+ 
+       setTimeout(() => {
+         this.mario.setVelocityY(-350);
+       }, 100);
+ 
+       setTimeout(() => {
+         this.scene.restart();
+       }, 2000);
+     }
+   },
+   loop: true
+ });
 }
 
 function update() {
@@ -223,8 +294,19 @@ function createPlatforms(scene) {
   });
 }
 
+
+function collectCohete(mario, cohete) {
+  cohete.disableBody(true, true); // Desactiva el cohete
+
+  // Redirige a otro HTML
+  window.location.href = '../primero.html'; // Cambia la ruta según tu necesidad
+}
+
 function collectOxigeno(mario, oxigeno) {
   oxigeno.disableBody(true, true);
+  this.tiempo  = 60; // Accede a la puntuación global de la escena
+  this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo); // Actualiza el texto de la puntuación
+
 }
 function collectMineral(mario, mineral) {
   mineral.disableBody(true, true);

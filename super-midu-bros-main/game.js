@@ -29,6 +29,7 @@ function preload() {
   this.load.image('planeta7', 'planetas/7.png');
   this.load.image('planeta8', 'planetas/8.png');
   this.load.image('planeta9', 'planetas/9.png');
+  this.load.image('cohete','planetas/rr.png')
   this.load.image('oxigeno', 'assets/oxigeno.png');
   this.load.image('mineral', 'planetas/cristal.png');
   this.load.image('floorbricks', 'assets/scenery/overworld/floorbricks.png');
@@ -66,6 +67,7 @@ function create() {
     child.setScale(Phaser.Math.FloatBetween(0.03, 0.05)); // Variar tamaño de las estrellas
     child.speed = Phaser.Math.FloatBetween(0.5, 1.3)// Fijar la velocidad a un valor extremadamente lento
   });
+
 
   this.add.image(800, 20, 'planeta4')
     .setOrigin(0, 1)
@@ -116,6 +118,12 @@ function create() {
     repeat: 4,
     setXY: { x: Phaser.Math.Between(200, 350), y: 0, stepX: 280 }
   });
+
+
+  // cohete 
+  this.cohete = this.physics.add.group();
+  this.cohete.create(600, config.height - 980, 'cohete').setOrigin(0,0).setScale(0.1);
+
 
   this.oxigeno.children.iterate(function (child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));
@@ -169,7 +177,9 @@ function create() {
   // Colisiones y física
   this.physics.world.setBounds(0, config.height - 1200, 1450, 1200);
   this.physics.add.collider(this.mario, this.floor);
+  this.physics.add.collider(this.cohete, this.floor);
   this.physics.add.collider(this.oxigeno, this.floor);
+  this.physics.add.overlap(this.mario, this.cohete, collectCohete, null, this)
   this.physics.add.overlap(this.mario, this.oxigeno, collectOxigeno, null, this);
   this.physics.add.collider(this.mineral, this.floor);
   this.physics.add.overlap(this.mario, this.mineral, collectMineral, null, this);
@@ -279,6 +289,14 @@ function createPlatforms(scene) {
     const asset = pos.asset || 'abajo';
     scene.floor.create(pos.x, pos.y, asset).setOrigin(0, 0.5).setScale(pos.scale).refreshBody();
   });
+}
+
+
+function collectCohete(mario, cohete) {
+  cohete.disableBody(true, true); // Desactiva el cohete
+
+  // Redirige a otro HTML
+  window.location.href = '../primero.html'; // Cambia la ruta según tu necesidad
 }
 
 function collectOxigeno(mario, oxigeno) {
