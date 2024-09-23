@@ -1,23 +1,33 @@
-export class RestartButton {
-    constructor(scene) {
-      this.relatedScene = scene;
+// escena.js
+import { configJuego } from './configuracion.js';
+import { Personaje } from './segunda.js';
+
+class MiEscena extends Phaser.Scene {
+    constructor() {
+        super({ key: 'MiEscena' });
     }
-  
-    // otros métodos de la clase
-    preload() {
-        this.relatedScene.load.spritesheet('button', 'images/restart.png', { frameWidth: 190, frameHeight: 49 });
-    }
+
     create() {
-        this.startButton = this.relatedScene.add.sprite(400, 230, 'button').setInteractive();
-    
-        this.startButton.on('pointerover', () => {
-          this.startButton.setFrame(1);
-        });
-        this.startButton.on('pointerout', () => {
-          this.startButton.setFrame(0);
-        });
-        this.startButton.on('pointerdown', () => {
-          this.relatedScene.scene.start('game');
-        });
+        // Usando atributos del objeto configJuego
+        console.log("Velocidad del jugador:", configJuego.velocidad);
+        console.log("Nombre del jugador:", configJuego.nombreJugador);
+
+        // Usando la clase importada desde personaje.js
+        let jugador = new Personaje(configJuego.nombreJugador, 100);
+        jugador.mover(configJuego.velocidad);
+
+        console.log("Configuración del juego:", configJuego);
+        jugador.recibirDano(20);
+        console.log("Puntos iniciales:", configJuego.puntos);
+
+        configJuego.puntos = configJuego.puntos+ 10;
+        console.log("Puntos actualizados:", configJuego.puntos);
     }
-  }
+
+    update() {
+        // Ahora puedes modificar 'puntos' del objeto configJuego
+        
+    }
+}
+
+export default MiEscena;
