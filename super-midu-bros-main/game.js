@@ -45,6 +45,7 @@ const span = document.getElementsByClassName("close")[0];
 // Función para mostrar el modal
 function showModal() {
   modal.style.display = "block";
+  // window.location.href = '../primero.html';
 }
 
 // Función para ocultar el modal
@@ -194,8 +195,8 @@ function create() {
 
 
    // temporzador 
-   this.tiempo = 60;
-   this.tiempoText = this.add.text(900, 0, 'TIEMPO DE VIDA: 60', { fontSize: '32px', fill: '#fff' });
+   this.tiempo = 30;
+   this.tiempoText = this.add.text(900, 0, 'TIEMPO DE VIDA: 30', { fontSize: '32px', fill: '#fff' });
   this.tiempoText.setScrollFactor(0);
    // Configura el temporizador para decrementar la puntuación
    this.time.addEvent({
@@ -215,10 +216,6 @@ function create() {
        setTimeout(() => {
          this.mario.setVelocityY(-350);
        }, 100);
- 
-       setTimeout(() => {
-         this.scene.restart();
-       }, 2000);
      }
    },
    loop: true
@@ -304,7 +301,7 @@ function collectCohete(mario, cohete) {
 
 function collectOxigeno(mario, oxigeno) {
   oxigeno.disableBody(true, true);
-  this.tiempo  = 60; // Accede a la puntuación global de la escena
+  this.tiempo  = 30; // Accede a la puntuación global de la escena
   this.tiempoText.setText('TIEMPO DE VIDA: ' + this.tiempo); // Actualiza el texto de la puntuación
 
 }
@@ -313,6 +310,10 @@ function collectMineral(mario, mineral) {
 
     score += 10;
     scoreText.setText('Score: ' + score);
+    if(score>=60){
+      scoreText.setText('Score: ' + score + ' - NIVEL COMPLETADO')
+      showModal()
+    }
 }
 
 function handleMarioMovement(scene) {
