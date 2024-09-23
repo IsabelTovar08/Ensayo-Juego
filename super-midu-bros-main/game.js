@@ -21,7 +21,7 @@ new Phaser.Game(config);
 
 function preload() {
   this.load.image('star', 'planetas/estrella.png');
-  this.load.image('button', 'assets/abajo2.png');
+  this.load.image('button', 'assets/abo2.png');
   this.load.image('cloud1', 'assets/scenery/overworld/cloud1.png');
   this.load.image('planeta4', 'planetas/4.png');
   this.load.image('planeta5', 'planetas/5.png');
@@ -39,7 +39,7 @@ function preload() {
   this.load.audio('gameover', 'assets/sound/music/gameover.mp3');
 }
 // Obtener el modal y el botón de cierre
-const modal = document.getElementById("myModal");
+const modal = document.getElementById("myModl");
 const span = document.getElementsByClassName("close")[0];
 
 // Función para mostrar el modal
