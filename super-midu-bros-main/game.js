@@ -1,5 +1,5 @@
 /* global Phaser */
-import { createAnimations } from "./animations.js"
+import { createAnimations } from "./animactions.js"
 
 const config = {
   type: Phaser.AUTO,

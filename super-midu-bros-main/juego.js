@@ -20,6 +20,8 @@ class MyScene extends Phaser.Scene {
      this.add.image(400, 300, 'fondo');
 
      this.floor = this.physics.add.staticGroup();
+     createPlatforms(this);
+     this.floor = this.physics.add.staticGroup();
      this.floor.create(0, config.height - 16, 'floorbricks').setOrigin(0, 0.5).refreshBody();
      this.floor.create(150, config.height - 16, 'floorbricks').setOrigin(0, 0.5).refreshBody();
 
@@ -33,12 +35,12 @@ class MyScene extends Phaser.Scene {
      manejarPuntos.configurarColisionOxigeno(this.oxigeno);
      manejarPuntos.configurarColisionMineral(this.mineral);
  
-     this.physics.world.setBounds(0, 0, 2000, config.height);
+     this.physics.world.setBounds(0, config.height - 1200, 1450, 1200);
      this.physics.add.collider(this.instanciaPersonaje.jugador, this.floor);
      this.physics.add.collider(this.mineral, this.floor);
      this.physics.add.collider(this.oxigeno, this.floor);
  
-     this.cameras.main.setBounds(0, 0, 2000, config.height);
+     this.cameras.main.setBounds(0, config.height - 1200, 1450, 1200);
      this.cameras.main.startFollow(this.instanciaPersonaje.jugador);
    }
 
