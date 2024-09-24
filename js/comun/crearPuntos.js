@@ -37,7 +37,27 @@ export class ManejarPuntos {
         this.configurarMinerales(mineralGroup);
         return mineralGroup;
     }
+    crearCorazones() {
+        const mineralGroup = this.scene.physics.add.group();
     
+        // Genera minerales en las tres posiciones Y (0, 300, 400)
+        [0, 300, 400].forEach(yPos => {
+            mineralGroup.createMultiple({
+                key: 'mineral',
+                repeat: 4, // Genera 5 minerales por cada posición Y (cambia si necesitas más o menos)
+                setXY: { x: Phaser.Math.Between(0, 600), y: yPos, stepX: 150 }  // Posiciones X separadas por 120 píxeles
+            });
+        });
+    
+        this.configurarCorazones(mineralGroup);
+        return mineralGroup;
+    }
+    configurarCorazones(mineralGroup) {
+        mineralGroup.children.iterate(function (child) {
+            child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));  // Rebote en Y
+            child.setScale(0.08);  // Escala del mineral
+        });
+    }
     configurarMinerales(mineralGroup) {
         mineralGroup.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.3));  // Rebote en Y
