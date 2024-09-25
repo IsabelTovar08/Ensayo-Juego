@@ -48,6 +48,10 @@ class MyScene extends Phaser.Scene {
       this.load.image('fondo', 'imgDulces/fondoo.png');
       this.load.image('fondo2', 'imgDulces/fondo-2.png');
       this.load.image('fondo3', 'imgDulces/fondo-3.png');
+      this.load.image('button','../juegoLava/imgLava/arriba.png')
+      this.load.image('leftButton','../juegoLava/imgLava/izqui.png')
+      this.load.image('rightButton','../juegoLava/imgLava/derecha.png');
+
 
    }
 
