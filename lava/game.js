@@ -139,7 +139,7 @@
   
       const leftButton = this.add.sprite(50, this.scale.height - 100, 'leftButton').setInteractive().setScale(0.5);
       leftButton.on('pointerdown', () => {
-          this.mario.setVelocityX(-160);
+          this.mario.setVelocityX(-160); 
       });
       leftButton.on('pointerup', () => {
           this.mario.setVelocityX(0);
