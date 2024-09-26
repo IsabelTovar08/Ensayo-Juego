@@ -17,7 +17,7 @@ class MyScene extends Phaser.Scene {
       this.load.image('rightButton','imgLava/derecha.png')
       this.load.image('star', 'imgLava/bo.png');
       this.load.spritesheet('mario', '../super-midu-bros-main/assets/entities/mario.png', { frameWidth: 18, frameHeight: 16 });
-      this.load.image('caramelo', 'imgLava/oro.png');
+      // this.load.image('caramelo', 'imgLava/oro.png');
       this.load.audio('gameover', '../super-midu-bros-main/assets/sound/music/gameover.mp3');
       this.load.image('oxigeno', '../super-midu-bros-main/assets/oxigeno.png');
       this.load.image('volcan','imgLava/ki.png')
@@ -33,26 +33,16 @@ class MyScene extends Phaser.Scene {
      this.load.image('piedra','imgLava/ed.png')
      this.load.image('pd','imgLava/pd.png')
      this.load.image('iglu', 'imgLava/iglu.png')
+     this.load.image('caramelo','imgLava/w.png')
+   
      
          
    }
 
    create() {
-   //   this.add.image(400, 300, 'fondo').setScale(0.5);
-     
-   // this.add.image(500, config.height -190, 'fondoLava').setScale(0.40)
- 
-   // this.add.image(800, config.height - 200, 'sec1').setScale(1)
-   // { x: 240, y: scene.scale.height - 400, scale: 0.1,asset: '111'},
-   // { x: 140, y: scene.scale.height - 400, scale: 0.1,asset: '111'},
-      
    this.add.image(700,config.height -300, 'fondo').setScale(0.3)
-   //  this.add.image(240,config.height - 400,'hielo').setScale(0.1)
-     
-
-
     this.add.image(300,config.height - 430,'hielo').setScale(0.2)
-   this.add.image(600, config.height -130, 'sec1').setScale(1)
+   // this.add.image(600, config.height -130, 'sec1').setScale(1)
 
 
       this.add.image(570, config.height - 248, 'piedra').setScale(0.04)
@@ -74,25 +64,6 @@ class MyScene extends Phaser.Scene {
    this.add.image(1150, config.height - 562, 'pd').setScale(0.05)
    this.add.image(1300, config.height - 280, 'pd').setScale(0.05)
    this.add.image(140, config.height - 500, 'iglu').setScale(0.2)
-   this.add.image(1180, config.height-95, 'caramelo-o').setScale(0.03).setOrigin(0,1);
-   // this.add.image(0, -500, 'fondo3').setOrigin(0,0).setScale(2);
-   //   this.add.image(400, 300, 'planetaC').setScale(0.3);
-   //   this.add.image(350, -100, 'planetaT').setScale(0.4).setAlpha(0.8);
-   //   this.add.image(1300, 400, 'planetaCh').setScale(0.4).setAlpha(0.8);
-   //   this.add.image(900, 100, 'queso').setScale(0.4).setAlpha(0.8);
-   //   this.add.image(1300, -200, 'planetaP').setScale(0.4).setAlpha(0.7);
-   //   this.add.image(1180, config.height-95, 'caramelo-o').setScale(0.04).setOrigin(0,1);
-   //   this.add.image(270, 210, 'piedra').setScale(0.05);
-   //   this.add.image(570, 390, 'dulce').setScale(0.05);
-   //   this.add.image(700, config.height -97, 'arbol').setScale(0.5);
-   //   this.add.image(820, config.height -270, 'gallo').setScale(0.5);
-
-
-
-
-
-
-
 
      this.floor = this.physics.add.staticGroup();
 
