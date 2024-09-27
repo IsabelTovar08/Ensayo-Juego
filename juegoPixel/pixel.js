@@ -35,6 +35,7 @@ class MyScene extends Phaser.Scene {
       this.load.image('montaña', 'imgPixel/kok/2.png');
       this.load.image('montañaFin', 'imgPixel/montaña-fin.png');
       this.load.image('montañaVerde', 'imgPixel/pixe/5.png');
+      this.load.image('siete','../juegoLuna/imgLuna/7.png')
    }
 
    create() {
@@ -78,20 +79,28 @@ class MyScene extends Phaser.Scene {
       // Crear instancia de Mario
       this.instanciaPersonaje = new Personaje(this);
 
+      // const manejarPuntos2 = new ManejarPuntos(this)
+
+
       const manejarPuntos = new ManejarPuntos(this);
       this.mineral = manejarPuntos.crearCorazones();
       this.oxigeno = manejarPuntos.crearOxigeno();
+      this.siete = manejarPuntos.crearSiete(1200, 300);
 
       manejarPuntos.configurarColisionOxigeno(this.oxigeno);
       manejarPuntos.configurarColisionMineral(this.mineral);
+      manejarPuntos.configurarColisionSiete(this.siete);
 
       this.physics.world.setBounds(0, config.height - 1500, 1850, 1500);
       this.physics.add.collider(this.instanciaPersonaje.jugador, this.floor);
       this.physics.add.collider(this.mineral, this.floor);
       this.physics.add.collider(this.oxigeno, this.floor);
+      this.physics.add.collider(this.siete,this.floor);
+      
 
       this.cameras.main.setBounds(0, config.height - 1500, 1850, 1500);
       this.cameras.main.startFollow(this.instanciaPersonaje.jugador);
+
    }
 
    update() {

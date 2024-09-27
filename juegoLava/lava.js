@@ -34,6 +34,7 @@ class MyScene extends Phaser.Scene {
      this.load.image('pd','imgLava/pd.png')
      this.load.image('iglu', 'imgLava/iglu.png')
      this.load.image('caramelo','imgLava/w.png')
+         this.load.image("siete", "imgLava/rr.png");
    
      
          
@@ -78,14 +79,17 @@ class MyScene extends Phaser.Scene {
      const manejarPuntos = new ManejarPuntos(this);
      this.mineral = manejarPuntos.crearMinerales(); 
      this.oxigeno = manejarPuntos.crearOxigeno();
+     this.siete = manejarPuntos.crearSiete(1200, 300);
  
      manejarPuntos.configurarColisionOxigeno(this.oxigeno);
      manejarPuntos.configurarColisionMineral(this.mineral);
+     manejarPuntos.configurarColisionSiete(this.siete);
 
      this.physics.world.setBounds(0, config.height - 1300, 1450, 1300);
      this.physics.add.collider(this.instanciaPersonaje.jugador, this.floor);
      this.physics.add.collider(this.mineral, this.floor);
      this.physics.add.collider(this.oxigeno, this.floor);
+     this.physics.add.collider(this.siete,this.floor);
  
      this.cameras.main.setBounds(0, config.height - 1300, 1450, 1300);
      this.cameras.main.startFollow(this.instanciaPersonaje.jugador);
